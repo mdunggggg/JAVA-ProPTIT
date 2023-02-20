@@ -6,28 +6,65 @@ import java.util.List;
 
 public class IOFile {
     public static <T> void writeFileListObject(String file, List<T> list){
+        FileOutputStream fos = null;
+        ObjectOutputStream oos = null;
+
         try{
-            FileOutputStream fos = new FileOutputStream(file);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            fos = new FileOutputStream(file);
+            oos = new ObjectOutputStream(fos);
             oos.writeObject(list);
-            oos.close();
-            fos.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        catch (Exception e) {
-            System.out.println(e);
+        finally {
+            if(fos != null){
+                try{
+                    fos.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if(oos != null){
+                try{
+                    oos.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
     public static <T> List<T> readFileListObject(String file){
         List<T>list = new ArrayList<>();
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
         try{
-            FileInputStream fis = new FileInputStream(file);
-            ObjectInputStream ois = new ObjectInputStream(fis);
+            fis = new FileInputStream(file);
+            ois = new ObjectInputStream(fis);
             list = (List<T>) ois.readObject();
-            ois.close();
-            fis.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
-        catch (Exception e){
-            System.out.println(e);
+        finally {
+            if(fis != null){
+                try{
+                    fis.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if(ois != null){
+                try{
+                    ois.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return list;
     }
